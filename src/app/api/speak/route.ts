@@ -30,9 +30,12 @@ export async function POST(req: Request) {
         'Content-Type': 'audio/mpeg',
       },
     });
-  } catch (error: any) {
-    console.error(error?.response?.data || error.message);
+  } catch (error: unknown) { // Use `unknown` type
+    if (axios.isAxiosError(error)) {
+      console.error(error.response?.data || error.message);
+    } else {
+      console.error('An unexpected error occurred', error);
+    }
     return NextResponse.json({ error: 'Failed to generate speech' }, { status: 500 });
   }
 }
-
